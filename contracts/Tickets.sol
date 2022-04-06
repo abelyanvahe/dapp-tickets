@@ -28,6 +28,10 @@ contract Tickets {
     }
 
     function buyTicket(uint _ticketId) public payable {
+        // Make sure the ticket is not already sold
+        require(tickets[_ticketId].owner == address(0x00));
+        // Make sure buyer sends enought payment
+        require(msg.value >= tickets[_ticketId].price);
         tickets[_ticketId].owner = msg.sender;
     }
 }
