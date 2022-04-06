@@ -7,13 +7,9 @@ const Tickets = props => {
     const [account, setAccount] = useState();
 
     const fetchTickets = useCallback(async () => {
-        console.log('Started');
         const web3 = await getWeb3();
-        console.log('web3', web3);
-        const contract = new web3.eth.Contract(ticketsContract.abi, '0xcB6B84c209F5b56CE6554a2e98F695537d96F430');
-        console.log('contract', contract);
+        const contract = new web3.eth.Contract(ticketsContract.abi, '0x01Dada94D213F846C578DA3b17Fb8C1658031149');
         const ticketCount = await contract.methods.getTicketCount().call();
-        console.log('ticketCount', ticketCount);
         const ticketsArray = [];
         for (let index = 0; index < ticketCount; index++) {
             const ticket = await contract.methods.tickets(index).call();
@@ -29,18 +25,15 @@ const Tickets = props => {
     }, [fetchTickets])
 
     const buyTicket = useCallback(async (ticketId) => {
-        console.log('Started', account);
         const web3 = await getWeb3();
-        console.log('web3', web3);
-        const contract = new web3.eth.Contract(ticketsContract.abi, '0xcB6B84c209F5b56CE6554a2e98F695537d96F430');
-        console.log('contract', contract);
-        await contract.methods.buyTicket(ticketId).call({
-            from: account
+        const contract = new web3.eth.Contract(ticketsContract.abi, '0x01Dada94D213F846C578DA3b17Fb8C1658031149');
+        const price = web3.utils.toWei('1', 'ether')  // 0.5 ETH == 10^18 wei
+        await contract.methods.buyTicket(ticketId).send({
+            from: account,
+            value: price
         });
         fetchTickets();
     }, [account])
-
-    console.log('tickets', tickets);
 
     return (
         <div>
