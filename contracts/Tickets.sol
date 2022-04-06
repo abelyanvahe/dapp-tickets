@@ -28,6 +28,7 @@ contract Tickets {
     }
 
     function buyTicket(uint _ticketId) public payable {
+        require(_ticketId >= 0 && _ticketId < ticketCount, "ticketId is wrong");
         // Make sure the ticket is not already sold
         require(tickets[_ticketId].owner == address(0x00));
         // Make sure buyer sends enought payment
